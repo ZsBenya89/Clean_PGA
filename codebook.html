@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1></h1>
+
+<p>subject</p>
+
+<hr/>
+
+<p>Storage mode: integer</p>
+
+<pre><code>      Min.:   1.000
+   1st Qu.:   8.000
+    Median:  15.500
+      Mean:  15.500
+   3rd Qu.:  23.000
+      Max.:  30.000
+</code></pre>
+
+<h1></h1>
+
+<p>activity</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 6 levels</p>
+
+<pre><code>    Values and labels    N    Percent 
+</code></pre>
+
+<p>1 &#39;LAYING&#39;             1980   16.7<br/>
+   2 &#39;SITTING&#39;            1980   16.7<br/>
+   3 &#39;STANDING&#39;           1980   16.7<br/>
+   4 &#39;WALKING&#39;            1980   16.7<br/>
+   5 &#39;WALKING_DOWNSTAIRS&#39; 1980   16.7<br/>
+   6 &#39;WALKING_UPSTAIRS&#39;   1980   16.7     </p>
+
+<h1></h1>
+
+<p>featDomain</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 2 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<pre><code>        1 &#39;Time&#39; 7200   60.6     
+        2 &#39;Freq&#39; 4680   39.4     
+</code></pre>
+
+<h1></h1>
+
+<p>featAcceleration</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 3 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<pre><code>     1 &#39;NA&#39;      4680   39.4     
+     2 &#39;Body&#39;    5760   48.5     
+     3 &#39;Gravity&#39; 1440   12.1     
+</code></pre>
+
+<h1></h1>
+
+<p>featInstrument</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 2 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<p>1 &#39;Accelerometer&#39; 7200   60.6<br/>
+   2 &#39;Gyroscope&#39;     4680   39.4     </p>
+
+<h1></h1>
+
+<p>featJerk</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 2 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<pre><code>        1 &#39;NA&#39;   7200   60.6     
+        2 &#39;Jerk&#39; 4680   39.4     
+</code></pre>
+
+<h1></h1>
+
+<p>featMagnitude</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 2 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<pre><code>   1 &#39;NA&#39;        8640   72.7     
+   2 &#39;Magnitude&#39; 3240   27.3     
+</code></pre>
+
+<h1></h1>
+
+<p>featVariable</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 2 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<pre><code>        1 &#39;Mean&#39; 5940   50.0     
+        2 &#39;SD&#39;   5940   50.0     
+</code></pre>
+
+<h1></h1>
+
+<p>featAxis</p>
+
+<hr/>
+
+<p>Storage mode: integer
+   Factor with 4 levels</p>
+
+<p>Values and labels    N    Percent </p>
+
+<pre><code>          1 &#39;NA&#39; 3240   27.3     
+          2 &#39;X&#39;  2880   24.2     
+          3 &#39;Y&#39;  2880   24.2     
+          4 &#39;Z&#39;  2880   24.2     
+</code></pre>
+
+<h1></h1>
+
+<p>count</p>
+
+<hr/>
+
+<p>Storage mode: integer</p>
+
+<pre><code>      Min.:  36.000
+   1st Qu.:  49.000
+    Median:  54.500
+      Mean:  57.217
+   3rd Qu.:  63.250
+      Max.:  95.000
+</code></pre>
+
+<h1></h1>
+
+<p>average</p>
+
+<hr/>
+
+<p>Storage mode: double</p>
+
+<pre><code>      Min.:  -0.998
+   1st Qu.:  -0.962
+    Median:  -0.470
+      Mean:  -0.484
+   3rd Qu.:  -0.078
+      Max.:   0.975
+</code></pre>
+
+</body>
+
+</html>

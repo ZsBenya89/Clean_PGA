@@ -1,0 +1,6 @@
+require(knitr)
+require(markdown)
+# setwd("C:/Users/Nobody/Documents/testdir/Clean_PGA")
+setwd("C:/Users/Nobody/Documents/testdir/Clean_PGA")
+knit("run_analysis.Rmd", encoding="ISO8859-1")
+markdownToHTML("run_analysis.md", "run_analysis.html")

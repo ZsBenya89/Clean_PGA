@@ -1,0 +1,256 @@
+---
+title: "Markdown for run_analysis.r"
+author: "Bence Zsámboki"
+date: '2018 január 30 '
+output: html_document
+---
+
+# Instructions
+## Getting and Cleaning Data Course Project 
+> The purpose of this project is to demonstrate your ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis. You will be graded by your peers on a series of yes/no questions related to the project. You will be required to submit: 1) a tidy data set as described below, 2) a link to a Github repository with your script for performing the analysis, and 3) a code book that describes the variables, the data, and any transformations or work that you performed to clean up the data called CodeBook.md. You should also include a README.md in the repo with your scripts. This repo explains how all of the scripts work and how they are connected.
+
+> One of the most exciting areas in all of data science right now is wearable computing - see for example this article . Companies like Fitbit, Nike, and Jawbone Up are racing to develop the most advanced algorithms to attract new users. The data linked to from the course website represent data collected from the accelerometers from the Samsung Galaxy S smartphone. A full description is available at the site where the data was obtained:  
+> http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones  
+
+> Here are the data for the project:  
+
+> https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+
+
+> You should create one R script called run_analysis.R that does the following.
+>
+1. Merges the training and the test sets to create one data set.
++Done
+2. Extracts only the measurements on the mean and standard deviation for each measurement.
++Done
+3. Uses descriptive activity names to name the activities in the data set
++Done
+4. Appropriately labels the data set with descriptive variable names.
++Done
+5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
++Done
+>Let's get it started!
+
+# Preps
+## Loading the packages
+
+```{r Load packages}
+packages <- c("data.table", "reshape2", "knitr", "memisc", "markdown")
+sapply(packages, library, character.only = T, quietly = T, logical.return = T, warn.conflicts = F)
+```
+
+## Set the path
+
+```{r Set path}
+path <- getwd()
+print(path)
+```
+
+#Getting and loading the data
+
+> Download the data and put these into the data folder (also check if it is completed)
+
+```{r Download files}
+URL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+File <- "Dataset.zip"
+if (!file.exists(path)) {dir.create(path)}
+if (!file.exists(File)) {download.file(URL, file.path(path, File))}
+```
+
+> Unzip files (also check if it is completed)
+
+```{r Unzipping}
+datalib <- "UCI HAR Dataset"
+if (!file.exists(datalib)) {unzip(zipfile = file.path(path, File))}
+```
+
+> Set the data folder (UCI HAR Dataset), and check the files
+
+```{r Set DF and check}
+datalib2 <- file.path(path, datalib)
+list.files(datalib2, recursive = T)
+```
+
+
+> Loading the data into R
+
+>Read activity files
+
+```{r Data loading activity}
+dataacttrain <- fread(file.path(datalib2, "train", "Y_train.txt"))
+dataacttest <- fread(file.path(datalib2, "test", "Y_test.txt"))
+```
+
+>Read subject files
+
+```{r Data loading subject}
+datasubtrain <- fread(file.path(datalib2, "train", "subject_train.txt"))
+datasubtest <- fread(file.path(datalib2, "test", "subject_test.txt"))
+```
+
+>Loading data files
+
+```{r Data loading X}
+datatrain <- fread(file.path(datalib2, "train", "X_train.txt"))
+datatest <- fread(file.path(datalib2, "test", "X_test.txt"))
+```
+
+#Merging datasets
+
+> Connect datatables into one table
+
+```{r Connect sub+act+data into one data table}
+datasub <- rbind(datasubtest, datasubtrain)
+setnames(datasub, "V1", "subject")
+dataact <- rbind(dataacttest, dataacttrain)
+setnames(dataact, "V1", "activityNumb")
+data <- rbind(datatest,datatrain)
+data <- cbind(datasub, dataact, data)
+```
+
+> Set the key
+
+```{r Setkey}
+setkey(data, subject, activityNumb)
+```
+
+#Extracts the mean and st deviation
+
+>First read the feature file and select the mean and st deviation codes. With these codes choose the appropirate mean and st dev. values.
+
+>Read feature file.
+
+```{r Read Feature}
+datafeature <- fread(file.path(datalib2, "features.txt"))
+setnames(datafeature, names(datafeature), c("featureNumb", "featureName"))
+```
+
+>Select the mean and st dev codes
+
+```{r Select st dev and mean}
+datafeature <- datafeature[grepl("mean\\(\\)|std\\(\\)", featureName)]
+```
+
+> Insert V in front of the code to match with the data file
+
+```{r convert codes}
+datafeature$featureCode <- datafeature[, paste0("V", featureNumb)]
+head(datafeature)
+```
+
+> Print the codes
+
+```{r Print codes}
+datafeature$featureCode
+```
+
+>Select mean and st dev values from data file
+
+```{r Mean and st dev selection}
+select <- c(key(data), datafeature$featureCode)
+data <- data[, select, with = F]
+```
+
+#Uses descriptive activity names to name the activities in the data set
+
+>Read the "activity_labels.txt" to use it as descriptive activity names
+
+```{r Read desc act names}
+dataactnames <- fread(file.path(datalib2, "activity_labels.txt"))
+setnames(dataactnames, names(dataactnames), c("activityNumb", "activityName"))
+```
+
+#ppropriately labels the data set with descriptive variable names.
+
+>Merge activity labels
+
+```{r Merge act. labels}
+data <- merge(data, dataactnames, by = "activityNumb", all.x = T)
+```
+
+>Set the keys
+
+```{r Set key ActNumb}
+setkey(data, subject, activityNumb, activityName)
+```
+
+>Reshape the table.
+
+```{r Reshape}
+data <- data.table(melt(data, key(data), variable.name = "featureCode"))
+```
+
+>Merging activity names
+
+```{r Merge activity names}
+data <- merge(data, datafeature[, list(featureNumb, featureCode, featureName)], by = "featureCode", all.x = T)
+```
+
+>Creating factor class variables for "activityName" and "featureName"
+
+```{r Creating factors}
+data$activity <- factor(data$activityName)
+data$feature <-  factor(data$featureName)
+```
+
+>Seperate features from "featureName" using the helper function "grepthis".
+
+
+```{r Sep featName}
+grepthis <- function(regex) {
+    grepl(regex, data$feature)
+}
+## Features with 2 categories
+n <- 2
+y <- matrix(seq(1, n), nrow = n)
+x <- matrix(c(grepthis("^t"), grepthis("^f")), ncol = nrow(y))
+data$featDomain <- factor(x %*% y, labels = c("Time", "Freq"))
+x <- matrix(c(grepthis("Acc"), grepthis("Gyro")), ncol = nrow(y))
+data$featInstrument <- factor(x %*% y, labels = c("Accelerometer", "Gyroscope"))
+x <- matrix(c(grepthis("BodyAcc"), grepthis("GravityAcc")), ncol = nrow(y))
+data$featAcceleration <- factor(x %*% y, labels = c(NA, "Body", "Gravity"))
+x <- matrix(c(grepthis("mean()"), grepthis("std()")), ncol = nrow(y))
+data$featVariable <- factor(x %*% y, labels = c("Mean", "SD"))
+## Features with 1 category
+data$featJerk <- factor(grepthis("Jerk"), labels = c(NA, "Jerk"))
+data$featMagnitude <- factor(grepthis("Mag"), labels = c(NA, "Magnitude"))
+## Features with 3 categories
+n <- 3
+y <- matrix(seq(1, n), nrow = n)
+x <- matrix(c(grepthis("-X"), grepthis("-Y"), grepthis("-Z")), ncol = nrow(y))
+data$featAxis <- factor(x %*% y, labels = c(NA, "X", "Y", "Z"))
+```
+
+
+>Check to make sure all possible combinations of "feature" are accounted for by all possible combinations of the factor class variables.
+
+
+```{r check comb}
+r1 <- nrow(data[, .N, by = c("feature")])
+r2 <- nrow(data[, .N, by = c("featDomain", "featAcceleration", "featInstrument", 
+    "featJerk", "featMagnitude", "featVariable", "featAxis")])
+r1 == r2
+```
+
+
+>Yes, I accounted for all possible combinations. "feature" is now redundant.
+
+#Create a tidy dataset
+
+```{r Create tidy}
+setkey(data, subject, activity, featDomain, featAcceleration, featInstrument, 
+    featJerk, featMagnitude, featVariable, featAxis)
+dataTidy <- data[, list(count = .N, average = mean(value)), by = key(data)]
+```
+
+>Make a codebook
+
+```{r Make codebook}
+Write(codebook(dataTidy), file = "Codebook.md")
+markdownToHTML("Codebook.md", "codebook.html")
+```
+
+> Write the output file
+
+```{r Write output}
+write.table(dataTidy, "Tidydataset.txt", row.names = F)
